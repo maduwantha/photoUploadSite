@@ -35,6 +35,10 @@
 
 <body>
     <?php
+    $mysql = new mysqli("localhost", "root", "", "photo_site");
+    if ($mysql->connect_errno) {
+        echo "fail" . $mysqli->connect_errno;
+    }
     session_start();
     //var_dump($_SESSION);;
     if (!isset($_SESSION['User_obj'])) {
@@ -57,11 +61,19 @@
 
         <!-- Folder Creation Form -->
         <div class="mb-4">
+            <?php
+            if (!empty($_POST['create_folder'])) {
+                $sql = "insert into folders (user_id, folder_name) values ('" . $_SESSION['User_obj']['id'] . "', '" . $_POST['folder_name'] . "') ";
+                mysqli_query($mysql, $sql);
+            }
+
+            ?>
             <h2>Create Folder</h2>
-            <form>
+
+            <form method="post">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Enter folder name" required>
-                    <button type="submit" class="btn btn-primary">Create Folder</button>
+                    <input type="text" name="folder_name" class="form-control" placeholder="Enter folder name" required>
+                    <input type="submit" name="create_folder" class="btn btn-primary" value="Create Folder" />
                 </div>
             </form>
         </div>
@@ -70,38 +82,19 @@
         <h3>Folder List</h3>
         <div class="row" id="folderGrid">
             <!-- Folder Example -->
-            <div class="col-md-3 mb-4 folder">
-                <div class="folder-icon">&#128194;</div>
-                <div class="folder-name">Folder 1</div>
-            </div>
-            <div class="col-md-3 mb-4 folder">
-                <div class="folder-icon">&#128194;</div>
-                <div class="folder-name">Folder 2</div>
-            </div>
-            <div class="col-md-3 mb-4 folder">
-                <div class="folder-icon">&#128194;</div>
-                <div class="folder-name">Folder 3</div>
-            </div>
-            <div class="col-md-3 mb-4 folder">
-                <div class="folder-icon">&#128194;</div>
-                <div class="folder-name">Folder 4</div>
-            </div>
-            <div class="col-md-3 mb-4 folder">
-                <div class="folder-icon">&#128194;</div>
-                <div class="folder-name">Folder 1</div>
-            </div>
-            <div class="col-md-3 mb-4 folder">
-                <div class="folder-icon">&#128194;</div>
-                <div class="folder-name">Folder 2</div>
-            </div>
-            <div class="col-md-3 mb-4 folder">
-                <div class="folder-icon">&#128194;</div>
-                <div class="folder-name">Folder 3</div>
-            </div>
-            <div class="col-md-3 mb-4 folder">
-                <div class="folder-icon">&#128194;</div>
-                <div class="folder-name">Folder 4</div>
-            </div>
+            <?php
+            $sql = "select * from folders where user_id =  " . $_SESSION['User_obj']['id'];
+            $result = mysqli_query($mysql, $sql);
+            while ($row = mysqli_fetch_array($result)) {
+                echo '<div class="col-md-3 mb-4 folder">';
+                echo '<div class="folder-icon">&#128194;</div>';
+                echo '<div class="folder-name">' . $row['folder_name'] . '</div>';
+                echo '<div style="font-size: 12px; color: #555;" class="folder-date">' . $row['create_date'] . '</div>';
+                echo '</div>';
+            }
+            ?>
+
+
         </div>
     </div>
 
