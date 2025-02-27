@@ -34,14 +34,25 @@
 </head>
 
 <body>
+    <?php
+    session_start();
+    //var_dump($_SESSION);;
+    if (!isset($_SESSION['User_obj'])) {
+        header("Location: index.php");
+        die();
+    }
+    // echo '<pre>';
+    // print_r($_SESSION['User_obj']);
+    // echo '</pre>';
+    ?>
 
     <div class="container mt-5">
 
         <!-- Logged-in User Info -->
         <div class="user-info">
-            <h4>Welcome, <span id="userName">John Doe</span></h4>
-            <p>Email: <span id="userEmail">johndoe@example.com</span></p>
-            <button class="btn btn-danger" onclick="logout()">Logout</button>
+            <h4>Welcome, <span id="userName"><?php echo $_SESSION['User_obj']['full_name']; ?></span></h4>
+            <p>Email: <span id="userEmail"><?php echo $_SESSION['User_obj']['email']; ?></span></p>
+            <a href="logout.php"><button class="btn btn-danger" onclick="">Logout</button></a>
         </div>
 
         <!-- Folder Creation Form -->

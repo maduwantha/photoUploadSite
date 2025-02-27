@@ -8,7 +8,7 @@
 
 <body>
     <?php
-
+    session_start();
     $mysql = new mysqli("localhost", "root", "", "photo_site");
     if ($mysql->connect_errno) {
         echo "fail" . $mysqli->connect_errno;
@@ -22,6 +22,7 @@
         $result = mysqli_query($mysql, $sql);
         while ($row = mysqli_fetch_array($result)) {
             //echo $row['id'] . $row['email'];
+            $_SESSION['User_obj'] = $row;
             header("Location: home.php");
             exit();
         }
